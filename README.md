@@ -17,7 +17,7 @@
 
 ## 🚀 部署指南
 1. **准备环境**：在 Hugging Face 或 VPS 上部署 n8n。
-2. **导入工作流**：下载本仓库的 `My workflow 2.json` 并导入 n8n。
+2. **导入工作流**：下载本仓库的 `workflow.json` 并导入 n8n。
 3. **配置凭据**：在 n8n 中设置 Telegram API、Google Gemini API 和 Google OAuth2。
 4. **设置变量**：修改 Google Sheets 节点中的 `documentId` 为你自己的表格 ID。
 
