@@ -1,47 +1,57 @@
 # Snap-to-Cloud-Accountant 🧾🤖
 
-一个基于 **n8n** + **Gemini 2.5 Flash-lite** 的全自动智能记账工作流。
-只需向 Telegram 发送收据照片或 PDF，AI 会自动识别并同步到 Google Sheets 和云端存档。
+[![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/ltidler/n8n-smart-accountant)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## 🌟 核心特性
-- **AI 智能识别**：利用 `gemini-2.5-flash-lite` 提取金额、商户及分类。
-- **双模态支持**：支持直接发送照片 (Image) 或 PDF 文档。
-- **持久化存储**：集成 **Supabase (PostgreSQL)** 作为后端数据库，防止重启丢数据。
-- **云端同步**：自动重命名并保存原始收据至 Google Drive，并登记至 Google Sheets。
+**Snap-to-Cloud-Accountant** 是一款基于 **n8n** + **Gemini 2.5 Flash-lite** 的个人财务自动化工具。通过简单的照片拍摄或 PDF 转换，AI 会自动审计收据、提取结构化数据并同步至 Google Sheets，同时利用 Supabase 实现数据的永久存储。
 
-## 🛠️ 部署指南
+---
 
-### 1. 准备工作
-- **n8n**: 部署在 Hugging Face Spaces (使用本项目提供的 Dockerfile)。
-- **Database**: 申请一个免费的 [Supabase](https://supabase.com/) 项目。
-- **AI API**: 在 [Google AI Studio](https://aistudio.google.com/) 获取 Gemini API Key。
-- **Bot**: 通过 BotFather 创建一个 Telegram Bot。
+## 🌟 核心功能
+- **智能审计**：使用 `gemini-2.5-flash-lite` 模型，精准识别商户、日期、金额、货币及消费分类。
+- **多格式支持**：兼容 Telegram 发送的图片（Image）与 PDF 文件。
+- **数据持久化**：后端接入 **Supabase (PostgreSQL)**，解决 Hugging Face 重启导致的工作流丢失问题。
+- **云端归档**：原始凭证自动重命名并保存至 Google Drive，方便日后查账。
 
-### 2. 环境变量配置 (Secrets)
-在你的部署环境（如 HF Spaces 的 Settings > Secrets）中添加以下变量：
+## 🛠️ 部署指南 (Hugging Face)
 
-| 变量名 | 说明 |
-| :--- | :--- |
-| `N8N_ENCRYPTION_KEY` | 随机长字符串，用于加密凭据 |
-| `DB_TYPE` | 固定填写 `postgresdb` |
-| `DB_POSTGRESDB_HOST` | Supabase 提供的 Host 地址 |
-| `DB_POSTGRESDB_PORT` | `5432` |
-| `DB_POSTGRESDB_DATABASE` | `postgres` |
-| `DB_POSTGRESDB_USER` | `postgres` |
-| `DB_POSTGRESDB_PASSWORD` | 你的数据库密码 |
-| `DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED` | `false` |
+本项目提供专用的 `Dockerfile`，支持在 Hugging Face Spaces 一键部署。
 
-### 3. 导入工作流
-1. 启动 n8n 后，点击 **Import from File**。
-2. 选择本仓库中的 `workflow.json`。
-3. 在 n8n 中配置你的 Telegram、Google Drive 和 Gemini 凭据。
+### 1. 环境变量配置 (Secrets)
+在部署环境（Settings > Secrets）中配置以下变量，确保连接到你的数据库：
 
-## 📁 分类字典
-本项目内置了严格的审计分类逻辑：
-- **F&B**: Meals, Groceries, Drinks, Dessert
-- **Transport**: Fuel, Toll, Parking, Maintenance
-- **Fixed expenses**: Utilities, Rental, Housing Loan...
-*(完整字典请查阅 workflow.json 内部节点说明)*
+| 变量名 | 必填 | 说明 |
+| :--- | :--- | :--- |
+| `N8N_ENCRYPTION_KEY` | 是 | 随机长字符串，用于保护你的凭据安全 |
+| `DB_TYPE` | 是 | 固定值为 `postgresdb` |
+| `DB_POSTGRESDB_HOST` | 是 | Supabase 数据库 Host 地址 |
+| `DB_POSTGRESDB_PASSWORD` | 是 | Supabase 数据库密码 |
+| `DB_POSTGRESDB_PORT` | 是 | `5432` |
+| `DB_POSTGRESDB_USER` | 是 | `postgres` |
+| `DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED` | 是 | `false` |
 
-## 📄 License
-MIT License
+### 2. 导入工作流
+1. 运行 n8n 后，进入界面选择 **Import from File**。
+2. 上传本仓库中的 `workflow.json`。
+3. 在节点中配置你的 **Telegram Bot Token**、**Gemini API Key** 及 **Google Service Account**。
+
+## 📂 支出分类字典 (SOP)
+为了保证记账的一致性，系统内置了以下分类逻辑：
+- **F&B (餐饮)**: Meals, Groceries, Drinks, Dessert
+- **Transport (出行)**: Fuel, Toll, Parking, Maintenance, Road tax
+- **Fixed Expenses (固定开支)**: Utilities, Rental, Housing Loan, Subscriptions
+- **Daily Needs (生活百货)**: Toiletries, Personal care, Pharmacy
+- **Lifestyle (生活方式)**: Skincare, Clothing, Entertainment, Gym
+
+## 🏗️ 技术架构
+- **Logic Engine**: n8n (Self-hosted on HF)
+- **AI Model**: Google Gemini 2.5 Flash-lite
+- **Database**: Supabase (PostgreSQL)
+- **Storage**: Google Drive & Google Sheets
+
+## 📄 开源协议
+本项目采用 [MIT License](LICENSE) 开源。
+
+---
+**Author**: [ltidler](https://github.com/ltidler)  
+*注：本项目仅供个人财务管理使用，请妥善保管你的 API Keys 与加密密钥。*
