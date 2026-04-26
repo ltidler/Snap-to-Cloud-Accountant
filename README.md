@@ -10,7 +10,7 @@
 
 ### 🛠️ 部署步骤
 1. **克隆仓库**：`git clone ...`
-2. **导入 n8n**：将 `workflow.json` 导入你的 n8n 实例。
+2. **导入 n8n**：将 `My workflow 2.json` 导入你的 n8n 实例。
 3. **配置环境变量**：
    - `TELEGRAM_BOT_TOKEN`
    - `GEMINI_API_KEY`
